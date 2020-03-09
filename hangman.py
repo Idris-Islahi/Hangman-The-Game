@@ -11,8 +11,8 @@ def checkDate():
     input_date=int(input('Input: '))
     
     #checking if input_date lies within the dates of last week(week = Monday to Sunday)
-    for days in range(7):
-        if input_date == ((last_weekend - dt.timedelta(days = 6-days)).day):
+    for count in range(7):
+        if input_date == ((last_weekend - dt.timedelta(days = 6-count)).day):
             return False
     else: return True
 
@@ -24,14 +24,14 @@ def getWord():
     #parsing html content using BeautifulSoup library to find required element by class name
     elem = BeautifulSoup(page.content,'html.parser').find('a',class_="css-12ln44y ea6r3x82")
 
-    #if the find() function falls to obtain any value, pass a default word - SPIDERMAN here- to playGame()    
+    #if the find() function fails to obtain any value(due to dynamic nature of the site), pass a default word - SPIDERMAN here- to playGame()    
     if elem == None:
         word = "SPIDERMAN"
     else: word = elem.text
     return word.lower()
     
     
-def displayProgress(steps):
+def displayMan(steps):
     if steps == 7:
         print(" |")
     
@@ -48,6 +48,7 @@ def playGame(guess):
     play = ['_'] * len(guess)
     print(' '.join(play))
     
+    #in this game, the hangman is hanged in 7 steps
     while chances<7:
         
         if ''.join(play) == guess:
@@ -55,7 +56,7 @@ def playGame(guess):
             sys.exit("word picked from www.dictionary.com")
             
         letter = input("Guess a letter: ").lower()
-        print("\n")
+
         if letter not in trials:
             if letter in guess:
                
@@ -67,10 +68,10 @@ def playGame(guess):
                     chances+=1
                     np.unique(trials.append(letter))
                 
-        print('Wrong guesses:'+' '.join(trials)+'\n\n')
+        print('\nWrong guesses:'+' '.join(trials)+'\n\n')
         print(' '.join(play))
         
-        displayProgress(chances)
+        displayMan(chances)
         if chances == 7:
             print("    "+guess)
             print("=================\n=================\n   You Lose!\n=================\n=================\n")
@@ -79,6 +80,7 @@ def playGame(guess):
             
             
 if __name__=='__main__':
+
     print("    ---------------------------\n\
     |   H  A  N  G  M  A  N   | \n\
     ---------------------------\n ")
