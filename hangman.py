@@ -82,6 +82,7 @@ def playGame(guess):
                 print("    "+guess)
                 print("=================\n=================\n   You Lose!\n=================\n=================\n")
                 sys.exit("word picked from www.dictionary.com")
+        else: print('\nYou guessed \'%d\' already' %letter)
 
             
             
@@ -96,7 +97,7 @@ if __name__=='__main__':
     input_date = dt.date(year,month,day)
     if checkDate(input_date):
         print("=================\n=================\n   Invalid Date!\n=================\n=================\n")
-        sys.exit("word picked from www.dictionary.com")
+        sys.exit()
     else:
          word_in = getWord(input_date)
          playGame(word_in)
