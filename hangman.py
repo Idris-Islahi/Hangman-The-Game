@@ -13,7 +13,7 @@ import datetime as dt
 def checkDate(in_date):
     
     #check if in_date within the past 6 days
-    if dt.date.today() - in_date <= dt.timedelta(days = 6) and dt.date.today() - in_date > dt.timedelta(days=0):
+    if dt.date.today() - in_date <= dt.timedelta(days = 6) and dt.date.today() - in_date >= dt.timedelta(days=0):
         return False
     else: return True
 
@@ -82,7 +82,7 @@ def playGame(guess):
                 print("    "+guess)
                 print("=================\n=================\n   You Lose!\n=================\n=================\n")
                 sys.exit("word picked from www.dictionary.com")
-        else: print('\nYou guessed \'%d\' already' %letter)
+        else: print('\nYou guessed \'%s\' already' %letter)
 
             
             
