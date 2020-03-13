@@ -1,37 +1,34 @@
+#!/usr/bin/python
+#-*-coding: utf-8-*-
+
+
 import numpy as np
 import sys
 from bs4 import BeautifulSoup
 import requests
+from datetime import datetime
 import datetime as dt
 
 
-def checkDate():
-    present = dt.datetime.now()
-    last_weekend = present - dt.timedelta(days = (dt.date.weekday(present)+1))
-    input_date=int(input('Input: '))
-    
-    #checking if input_date lies within the dates of last week(week = Monday to Sunday)
-    for count in range(7):
-        if input_date == ((last_weekend - dt.timedelta(days = 6-count)).day):
-            return False
+def checkDate(in_date):
+    if dt.date.today() - in_date <= dt.timedelta(days = 6) and dt.date.today() - in_date > dt.timedelta(days=0):
+        return False
     else: return True
 
 
-def getWord():
-    url = "https://www.dictionary.com/"
-    page = requests.get(url)      
-    
-    #parsing html content using BeautifulSoup library to find required element by class name
-    elem = BeautifulSoup(page.content,'html.parser').find('a',class_="css-12ln44y ea6r3x82")
 
-    #if the find() function fails to obtain any value(due to dynamic nature of the site), pass a default word - SPIDERMAN here- to playGame()    
-    if elem == None:
-        word = "SPIDERMAN"
-    else: word = elem.text
-    return word.lower()
+def getWord(in_date):
+    page = requests.get('https://www.dictionary.com/e/word-of-the-day/')
+    soup = BeautifulSoup(page.content,'html.parser')
+    wotd = (soup.find_all('div',class_="wotd-item-headword"))
+    for word in range(len(wotd)):
+        dates = datetime.strptime(wotd[word].find('div',class_='wotd-item-headword__date').text,'\n%A, %B %d, %Y\n').strftime('%Y-%m-%d')
+        if str(in_date) == dates:
+            return (wotd[word].h1.text)
     
     
 def displayMan(steps):
+    print("_________________")
     if steps == 7:
         print(" |")
     
@@ -85,13 +82,12 @@ if __name__=='__main__':
     |   H  A  N  G  M  A  N   | \n\
     ---------------------------\n ")
     print("....Find the word, or hang the man....\n\n")
-    print("#Enter a date from last week to continue.")
-    
-    if checkDate():
+    entry = input("#Enter a date(YYYY-MM-DD) within the last seven days.\n")
+    year,month,day = map(int,entry.split('-'))
+    input_date = dt.date(year,month,day)
+    if checkDate(input_date):
         print("=================\n=================\n   Invalid Date!\n=================\n=================\n")
         sys.exit("word picked from www.dictionary.com")
     else:
-         word_in = getWord()
+         word_in = getWord(input_date)
          playGame(word_in)
-
-    
