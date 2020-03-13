@@ -11,6 +11,8 @@ import datetime as dt
 
 
 def checkDate(in_date):
+    
+    #check if in_date within the past 6 days
     if dt.date.today() - in_date <= dt.timedelta(days = 6) and dt.date.today() - in_date > dt.timedelta(days=0):
         return False
     else: return True
@@ -18,13 +20,19 @@ def checkDate(in_date):
 
 
 def getWord(in_date):
+    
     page = requests.get('https://www.dictionary.com/e/word-of-the-day/')
     soup = BeautifulSoup(page.content,'html.parser')
-    wotd = (soup.find_all('div',class_="wotd-item-headword"))
-    for word in range(len(wotd)):
-        dates = datetime.strptime(wotd[word].find('div',class_='wotd-item-headword__date').text,'\n%A, %B %d, %Y\n').strftime('%Y-%m-%d')
+    #the variable 'seven_words' stores all word-of-the-day containers from the given webpage
+    seven_words = (soup.find_all('div',class_="wotd-item-headword"))
+
+    
+    for word in range(len(seven_words)):
+        #the variable 'dates' stores each date given inside each word-of-the-day container in a YYYY-MM-DD format string 
+        dates = datetime.strptime(seven_words[word].find('div',class_='wotd-item-headword__date').text,'\n%A, %B %d, %Y\n').strftime('%Y-%m-%d')
+        #if date is found, return word within that container
         if str(in_date) == dates:
-            return (wotd[word].h1.text)
+            return (seven_words[word].h1.text)
     
     
 def displayMan(steps):
@@ -40,8 +48,9 @@ def displayMan(steps):
     
 def playGame(guess):
     chances=0
+    #the array 'trials' stores every new wrong guess
     trials = []
-    
+    #the variable 'play' contains the string where letters are filled on correct guessing
     play = ['_'] * len(guess)
     print(' '.join(play))
     
@@ -65,14 +74,14 @@ def playGame(guess):
                     chances+=1
                     np.unique(trials.append(letter))
                 
-        print('\nWrong guesses:'+' '.join(trials)+'\n\n')
-        print(' '.join(play))
+            print('\nWrong guesses:'+' '.join(trials)+'\n\n')
+            print(' '.join(play))
         
-        displayMan(chances)
-        if chances == 7:
-            print("    "+guess)
-            print("=================\n=================\n   You Lose!\n=================\n=================\n")
-            sys.exit("word picked from www.dictionary.com")
+            displayMan(chances)
+            if chances == 7:
+                print("    "+guess)
+                print("=================\n=================\n   You Lose!\n=================\n=================\n")
+                sys.exit("word picked from www.dictionary.com")
 
             
             
