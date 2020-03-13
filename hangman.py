@@ -92,8 +92,10 @@ if __name__=='__main__':
     |   H  A  N  G  M  A  N   | \n\
     ---------------------------\n ")
     print("....Find the word, or hang the man....\n\n")
-    entry = input("#Enter a date(YYYY-MM-DD) within the last seven days.\n")
-    year,month,day = map(int,entry.split('-'))
+    print("#Enter a date(YYYY-MM-DD) within the last seven days.\n")
+    year = int(input("Enter year(YYYY): "))
+    month = int(input("Enter month(MM): "))
+    day = int(input("Enter date(DD): "))
     input_date = dt.date(year,month,day)
     if checkDate(input_date):
         print("=================\n=================\n   Invalid Date!\n=================\n=================\n")
